@@ -53,6 +53,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/audit/**").authenticated()
                 .requestMatchers("/api/inventory/**").authenticated()
                 .requestMatchers("/api/users/**").permitAll()
+                .requestMatchers("/api/init/**").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

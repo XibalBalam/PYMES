@@ -1,6 +1,7 @@
 package gob.gt.com.lab.demo.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class Invoice {
     private LocalDate date;
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<InvoiceLine> lines;
 
     private Double total;

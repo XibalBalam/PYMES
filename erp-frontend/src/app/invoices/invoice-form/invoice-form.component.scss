@@ -8,6 +8,15 @@
 	gap: 1rem;
 	margin-top: 1rem;
 }
+ .invoice-line-row {
+ 	display: flex;
+ 	gap: 1rem;
+ 	align-items: center;
+ 	margin-bottom: 0.5rem;
+ }
+ .line-field {
+ 	width: 180px;
+ }
 mat-card {
 	max-width: 500px;
 	margin: 2rem auto;

@@ -22,7 +22,20 @@ public class ProductService {
     }
 
     public Product createProduct(Product product) {
+        // Generar SKU automáticamente si no se proporciona
+        if (product.getSku() == null || product.getSku().isEmpty()) {
+            product.setSku(generateSku(product.getName()));
+        }
         return productRepository.save(product);
+    }
+
+    private String generateSku(String name) {
+        // Generar SKU basado en el nombre + timestamp
+        String baseSku = name.replaceAll("[^a-zA-Z0-9]", "").toUpperCase();
+        if (baseSku.length() > 6) {
+            baseSku = baseSku.substring(0, 6);
+        }
+        return baseSku + System.currentTimeMillis() % 10000;
     }
 
     public Product updateProduct(Long id, Product productDetails) {
@@ -31,6 +44,10 @@ public class ProductService {
             product.setDescription(productDetails.getDescription());
             product.setPrice(productDetails.getPrice());
             product.setUnit(productDetails.getUnit());
+            // Actualizar SKU solo si se proporciona uno nuevo
+            if (productDetails.getSku() != null && !productDetails.getSku().isEmpty()) {
+                product.setSku(productDetails.getSku());
+            }
             return productRepository.save(product);
         }).orElse(null);
     }

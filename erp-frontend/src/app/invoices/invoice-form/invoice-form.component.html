@@ -15,30 +15,55 @@
 			<input matInput type="date" formControlName="date" required>
 			<mat-error *ngIf="form.get('date')?.hasError('required')">Requerido</mat-error>
 		</mat-form-field>
-		<mat-form-field appearance="outline" class="full-width">
-			<mat-label>Cliente</mat-label>
-			<input matInput formControlName="customer" required>
-			<mat-error *ngIf="form.get('customer')?.hasError('required')">Requerido</mat-error>
-		</mat-form-field>
-		<mat-form-field appearance="outline" class="full-width">
-			<mat-label>Total</mat-label>
-			<input matInput type="number" formControlName="total" required min="0">
-			<mat-error *ngIf="form.get('total')?.hasError('required')">Requerido</mat-error>
-			<mat-error *ngIf="form.get('total')?.hasError('min')">No puede ser negativo</mat-error>
-		</mat-form-field>
-		<mat-form-field appearance="outline" class="full-width">
-			<mat-label>Activo</mat-label>
-			<mat-select formControlName="isActive">
-				<mat-option [value]="true">Sí</mat-option>
-				<mat-option [value]="false">No</mat-option>
-			</mat-select>
-		</mat-form-field>
-		<div class="actions">
-			<button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || loading">
-				<mat-icon>save</mat-icon> Guardar
-			</button>
-			<button mat-button type="button" (click)="cancel()" [disabled]="loading">Cancelar</button>
-		</div>
-		<mat-error *ngIf="error">{{ error }}</mat-error>
+			<mat-form-field appearance="outline" class="full-width">
+				<mat-label>Cliente</mat-label>
+				<mat-select formControlName="customer" required>
+					<mat-option *ngFor="let cust of customers" [value]="cust.id">{{ cust.name }}</mat-option>
+				</mat-select>
+				<mat-error *ngIf="form.get('customer')?.hasError('required')">Requerido</mat-error>
+			</mat-form-field>
+			<div formArrayName="lines">
+				<div *ngFor="let line of lines.controls; let i = index" [formGroupName]="i" class="invoice-line-row">
+					<mat-form-field appearance="outline" class="line-field">
+						<mat-label>Producto</mat-label>
+						<mat-select formControlName="product" required>
+							<mat-option *ngFor="let prod of products" [value]="prod.id">{{ prod.name }}</mat-option>
+						</mat-select>
+						<mat-error *ngIf="line.get('product')?.hasError('required')">Requerido</mat-error>
+					</mat-form-field>
+					<mat-form-field appearance="outline" class="line-field">
+						<mat-label>Cantidad</mat-label>
+						<input matInput type="number" formControlName="quantity" required min="1">
+						<mat-error *ngIf="line.get('quantity')?.hasError('required')">Requerido</mat-error>
+						<mat-error *ngIf="line.get('quantity')?.hasError('min')">Debe ser mayor a 0</mat-error>
+					</mat-form-field>
+					<mat-form-field appearance="outline" class="line-field">
+						<mat-label>Precio</mat-label>
+						<input matInput type="number" formControlName="price" required min="0.01">
+						<mat-error *ngIf="line.get('price')?.hasError('required')">Requerido</mat-error>
+						<mat-error *ngIf="line.get('price')?.hasError('min')">Debe ser mayor a 0</mat-error>
+					</mat-form-field>
+					<button mat-icon-button color="warn" type="button" (click)="removeLine(i)" *ngIf="lines.length > 1">
+						<mat-icon>delete</mat-icon>
+					</button>
+				</div>
+				<button mat-button color="primary" type="button" (click)="addLine()">
+					<mat-icon>add</mat-icon> Agregar línea
+				</button>
+			</div>
+			<mat-form-field appearance="outline" class="full-width">
+				<mat-label>Activo</mat-label>
+				<mat-select formControlName="isActive">
+					<mat-option [value]="true">Sí</mat-option>
+					<mat-option [value]="false">No</mat-option>
+				</mat-select>
+			</mat-form-field>
+			<div class="actions">
+				<button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || loading">
+					<mat-icon>save</mat-icon> Guardar
+				</button>
+				<button mat-button type="button" (click)="cancel()" [disabled]="loading">Cancelar</button>
+			</div>
+			<mat-error *ngIf="error">{{ error }}</mat-error>
 	</form>
 </mat-card>

@@ -2,6 +2,7 @@ package gob.gt.com.lab.demo.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "invoice_lines")
@@ -12,6 +13,7 @@ public class InvoiceLine {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "invoice_id")
+    @JsonBackReference
     private Invoice invoice;
 
     @ManyToOne(optional = false)
